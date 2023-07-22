@@ -1,0 +1,52 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.container{
+    width: 80%;
+    margin:100px auto;
+
+    /* background-color: grey; */
+}
+
+.row {
+     width: 80%;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.post{
+    width: 100%;
+    display: block;
+}
+
+.list  {
+    border: 1px solid gray;
+    border-radius: 8px;
+   background-color: aquamarine;
+ 
+}
+
+.list div {
+    width: 220px;
+    margin: 0 auto;
+    padding: 20px;
+    /* background-color: teal; */
+}
+
+.post div{
+    width: 100%;
+    margin: 1rem auto;
+    padding: 20px;
+}
+
+.list button ,.post button{
+    padding: 5px 10px;
+    background-color: blueviolet;
+    border: 1px solid gray;
+    border-radius: 8px;
+}
