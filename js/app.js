@@ -2,20 +2,23 @@
 const row = document.querySelector(".row");
 const post = document.querySelector(".post");
 const comment = document.querySelector(".comment");
-let userId;
-let userName;
-row.addEventListener("click",showUsersPosts)
-post.addEventListener("click" , showPostsComment)
+let userId = null;
+let userName = null;
+let postId = null;
+
+// events
+row.addEventListener("click", showUsersPosts);
+post.addEventListener("click", showPostsComment);
+
 showUsers();
 
+// users
 function showUsers() {
-   httpAjaxRequest("https://jsonplaceholder.typicode.com/users" , usersList) ;
-  
- 
+    httpAjaxRequest("https://jsonplaceholder.typicode.com/users", usersList);
 }
 
 function usersList(users) {
-    users.map(function(item){
+    users.map(function (item) {
         row.innerHTML += ` <div class="list">
                             <div>
                                 <p><strong>Id:</strong>  ${item.id}</p>
@@ -28,74 +31,69 @@ function usersList(users) {
                                 <button data-id="${item.id}" data-name="${item.name}"><strong>phone:</strong> ${item.phone}</button>
                             </div>
                            </div>`;
-       })
+    });
 }
-
+// posts
 function showUsersPosts(e) {
-
     if (e.target.nodeName === "BUTTON") {
-           httpAjaxRequest("https://jsonplaceholder.typicode.com/posts" , postsList)
+        userId = e.target.dataset.id;
+        userName = e.target.dataset.name;
+        httpAjaxRequest("https://jsonplaceholder.typicode.com/posts", postsList);
     }
-      userId= e.target.dataset.id;
-      userName= e.target.dataset.name;
 }
 
 function postsList(posts) {
     post.innerHTML = "";
-    posts.map(function(item){
-
-        if ( item.userId == userId ) {
-            post.innerHTML += ` <div class="list">
-                                 <h2>${userName}'s post</h2>
-                                    <p>${item.id}</p>
-                                    <h4>${item.title}</h4>
-                                    <p>${item.body}</p>
-                                    <button data-id="${item.id}" >comments</button>
-                                </div>
-                                <div class="comment"></div>`;
-        }
-       
+    let result = posts.filter(function (item) {
+        return item.userId == userId;
     })
-   
+
+    for (const item of result) {
+        post.innerHTML += ` <div class="list">
+                                    <h2><strong>Username:</strong>${userName}'s post</h2>
+                                    <p><strong>Id:</strong>${item.id}</p>
+                                    <p><strong>Title:</strong>${item.title}</p>
+                                    <p><strong>Body:</strong>${item.body}</p>
+                                    <button data-id="${item.id}" >comments</button>
+                            </div>`;
+    }
+
 }
 
+// post's comments
 function showPostsComment(e) {
-
     if (e.target.nodeName === "BUTTON") {
-           httpAjaxRequest("https://jsonplaceholder.typicode.com/comments" , commentsList)
+        postId = e.target.dataset.id;
+        httpAjaxRequest(
+            `https://jsonplaceholder.typicode.com/posts/${postId}/comments`,
+            commentsList
+        );
     }
 }
 
 function commentsList(comments) {
-    // comment.innerHTML = "";
-    comments.map(function(item){
-
-        // if ( item.postId == userId && item.Id == userId  ) {
-            post.lastChild.innerHTML += ` <div class="list">
-                                    <p>${item.id} comment of post ${userId} </p>
-                                    <h4>${item.name}</h4>
-                                    <p>${item.body}</p>
-                                    <p>${item.email}</p>
-                                </div>`;
-        // }
-       
-    })
-   
+    comment.innerHTML = "";
+    comments.map(function (item) {
+        comment.innerHTML += ` <div class="list">
+                                    <p>comment ${item.id} of post ${postId} ${userName} </p>
+                                    <h4> <strong>name:</strong>${item.name}</h4>
+                                    <p><strong>body :</strong>${item.body}</p>
+                                    <p><strong>email :</strong>${item.email}</p>
+                           </div>`;
+    });
 }
 
-function httpAjaxRequest(address , targetFunc) {
+function httpAjaxRequest(address, targetFunc) {
     let xhr = new XMLHttpRequest();
 
-xhr.onreadystatechange = function(){
-    if (xhr.readyState == 4 && xhr.status == 200) {
-   
-         var result  = JSON.parse(xhr.responseText);
-        
-         targetFunc(result);
-       
-    }
-}
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+            var result = JSON.parse(xhr.responseText);
 
-xhr.open("GET" , address);
-xhr.send();
+            targetFunc(result);
+        }
+    };
+
+    xhr.open("GET", address);
+    xhr.send();
 }
