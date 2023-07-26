@@ -36,30 +36,46 @@ function usersList(users) {
 // posts
 function showUsersPosts(e) {
     if (e.target.nodeName === "BUTTON") {
+<<<<<<< Updated upstream
         userId = e.target.dataset.id;
         userName = e.target.dataset.name;
+=======
+>>>>>>> Stashed changes
         httpAjaxRequest("https://jsonplaceholder.typicode.com/posts", postsList);
     }
 }
 
 function postsList(posts) {
     post.innerHTML = "";
+<<<<<<< Updated upstream
     let result = posts.filter(function (item) {
         return item.userId == userId;
     })
 
     for (const item of result) {
         post.innerHTML += ` <div class="list">
+=======
+    posts.map(function (item) {
+        if (item.userId == userId) {
+            post.innerHTML += ` <div class="list">
+>>>>>>> Stashed changes
                                     <h2><strong>Username:</strong>${userName}'s post</h2>
                                     <p><strong>Id:</strong>${item.id}</p>
                                     <p><strong>Title:</strong>${item.title}</p>
                                     <p><strong>Body:</strong>${item.body}</p>
                                     <button data-id="${item.id}" >comments</button>
+<<<<<<< Updated upstream
                             </div>`;
     }
 
 }
 
+=======
+                          </div>`;
+        }
+    });
+}
+>>>>>>> Stashed changes
 // post's comments
 function showPostsComment(e) {
     if (e.target.nodeName === "BUTTON") {
