@@ -91,6 +91,8 @@ function httpAjaxRequest(address, targetFunc) {
             var result = JSON.parse(xhr.responseText);
 
             targetFunc(result);
+        } else if(xhr.status == 404 ){
+            alert("try again and check internet connection")
         }
     };
 
